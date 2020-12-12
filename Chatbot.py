@@ -121,7 +121,7 @@ def get_response(agent: WebhookClient) -> dict:
     response.update(agent_response)
     return response
 
-@app.route('/', methods=['POST'])
+@app.route('/fulfillment', methods=['POST'])
 def webhook() -> Dict:
     request_ = request.get_json(force=True)
     session = request_['session'].split("/")[-1]
@@ -133,6 +133,10 @@ def webhook() -> Dict:
     agent = WebhookClient(request_)
     agent = intent_switch(queryResult['intent']['displayName'], queryResult, agent, session)
     return get_response(agent)
+
+@app.route('/', methods=['POST'])
+def index():
+    return "Chatbot-johan server"
 
 def clear_expired_sessions():
     current_time = int(time.time())
